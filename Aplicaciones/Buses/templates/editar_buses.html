@@ -1,0 +1,115 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="row w-100">
+            <!-- Formulario en la columna izquierda -->
+            <div class="col-lg-12 mb-4">
+                <h6 class="text-primary text-uppercase font-weight-bold">Gestionar Buses</h6>
+                <h1 class="mb-4">Actualizar los Datos del Bus</h1>
+                
+                <!-- Formulario de gestión de buses -->
+                <div class="contact-form bg-secondary" style="padding: 30px;">
+                    <div id="success"></div>
+                    <form name="sentMessage" id="id_formulario_bus" method="post" novalidate="novalidate" action="/procesar_edicion_bus/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_bus" value="{{ bus.id_bus }}">
+                        
+                        <!-- Campo para la Placa del Bus -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="placa" name="placa" placeholder="Placa del Bus" required="required" data-validation-required-message="Por favor ingrese la placa del bus" value="{{ bus.placa }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Capacidad del Bus -->
+                        <div class="control-group">
+                            <input type="number" class="form-control border-0 p-4" id="capacidad" name="capacidad" placeholder="Capacidad del Bus" required="required" data-validation-required-message="Por favor ingrese la capacidad del bus" value="{{ bus.capacidad }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para el Modelo del Bus -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="modelo" name="modelo" placeholder="Modelo del Bus" required="required" data-validation-required-message="Por favor ingrese el modelo del bus" value="{{ bus.modelo }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Marca del Bus -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="marca" name="marca" placeholder="Marca del Bus" required="required" data-validation-required-message="Por favor ingrese la marca del bus" value="{{ bus.marca }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Botón de acción -->
+                        <div class="control-group">
+                            <button class="btn btn-success py-3 px-4" type="submit" id="guardar_bus">Actualizar Bus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#id_formulario_bus").validate({
+            rules: {
+                "placa": {
+                    required: true,
+                    minlength: 3
+                },
+                "capacidad": {
+                    required: true,
+                    digits: true,
+                    min: 1
+                },
+                "modelo": {
+                    required: true,
+                    minlength: 3
+                },
+                "marca": {
+                    required: true,
+                    minlength: 3
+                }
+            },
+            messages: {
+                "placa": {
+                    required: "Por favor, ingresa la placa del bus.",
+                    minlength: "La placa debe tener al menos 3 caracteres."
+                },
+                "capacidad": {
+                    required: "Por favor, ingresa la capacidad del bus.",
+                    digits: "La capacidad debe ser un número.",
+                    min: "La capacidad debe ser al menos 1."
+                },
+                "modelo": {
+                    required: "Por favor, ingresa el modelo del bus.",
+                    minlength: "El modelo debe tener al menos 3 caracteres."
+                },
+                "marca": {
+                    required: "Por favor, ingresa la marca del bus.",
+                    minlength: "La marca debe tener al menos 3 caracteres."
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    label.error {
+        color: white;
+        font-weight: bold;
+        background-color: red;
+        border-radius: 10px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    input.error, textarea.error, select.error {
+        border: 1px solid red;
+    }
+</style>
+
+{% endblock %}

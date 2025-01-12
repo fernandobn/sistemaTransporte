@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJxT+K6rfvA6XBl7h49TxzXf2nXg1im6tP0D0uHGoxJkChqHzkOaMm8wUs4B" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+    <div class="container py-5">
+        <!-- Header con Logo -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <img src="{% static 'img/logo_factura.png' %}" alt="Logo de la Empresa" class="img-fluid" style="max-height: 80px;">
+            </div>
+            <div>
+                <h1 class="text-primary">Factura</h1>
+            </div>
+        </div>
+
+        <!-- Card principal -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <!-- Título de la Factura -->
+                <h2 class="text-center text-primary mb-4">Factura #{{ factura.id_factura }}</h2>
+
+                <!-- Información del Cliente y Detalles -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5 class="text-secondary">Información del Cliente</h5>
+                        <p><strong>Nombre:</strong> {{ factura.cliente.nombre }} {{ factura.cliente.apellido }}</p>
+                        <p><strong>Fecha de Emisión:</strong> {{ factura.fecha_emision }}</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <h5 class="text-secondary">Detalles de la Factura</h5>
+                        <p><strong>Total:</strong> ${{ factura.total }}</p>
+                    </div>
+                </div>
+
+                <!-- Tabla de Pasajes -->
+                <h3 class="text-secondary mb-3">Detalle de Pasajes</h3>
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Ruta</th>
+                            <th>Horario</th>
+                            <th>Número de Asiento</th>
+                            <th>Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pasaje in pasajes %}
+                        <tr>
+                            <td>{{ pasaje.horario.ruta.origen }} → {{ pasaje.horario.ruta.destino }}</td>
+                            <td>{{ pasaje.horario.hora_salida }} - {{ pasaje.horario.hora_llegada }}</td>
+                            <td>{{ pasaje.numero_asiento }}</td>
+                            <td>${{ pasaje.costo }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Footer -->
+                <div class="text-center mt-5">
+                    <p class="text-muted">Gracias por su compra. Para más información, visite nuestro sitio web.</p>
+                    <p class="text-muted">&copy; 2025 Empresa de Transporte. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0lZXr9uUpV5uZXx8huVbLXHbgblZfF4t61faUgDeA8o1eDoP" crossorigin="anonymous"></script>
+</body>
+</html>

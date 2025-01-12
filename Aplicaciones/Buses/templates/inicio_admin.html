@@ -1,0 +1,197 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>FASTER - Compañia de buses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Venta de pasajes online">
+    <!--jquery y izitoast-->
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.js' %}"></script>
+    <script src="{% static 'js/validacion.js' %}"></script>
+    <link href="{% static 'plantilla/transport/img/autobus.ico' %}" rel="icon">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" integrity="sha512-DIW4FkYTOxjCqRt7oS9BFO+nVOwDL4bzukDyDtMO7crjUZhwpyrWBFroq+IqRe6VnJkTpRAS6nhDvf0w+wHmxg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="{% static 'css/colores_validacion.css' %}">
+
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link href="{% static 'plantilla/transport/img/autobus.ico' %}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'plantilla/transport/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-lg-5">
+            <a href="/ir_bus/" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 display-5 text-uppercase text-primary"><i class="fa fa-bus-alt mr-2"></i>Administracion</h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                <div class="navbar-nav m-auto py-0">
+                    <a href="/ir_bus/" class="nav-item nav-link active">Bus</a>
+                    <a href="/ir_conductor/" class="nav-item nav-link">Conductor</a>
+                    <a href="/ir_ruta/" class="nav-item nav-link">Ruta</a>
+                    <a href="/listado_pasajes/" class="nav-item nav-link">Ver Pasaje</a>
+                    <a href="/listado_facturas/" class="nav-item nav-link">Ver Facturas</a>
+
+                    
+                    <a href="/ir_horario/" class="nav-item nav-link">Horario</a>
+                </div>
+                <a href="/cerrarSecion/" class="btn btn-primary py-2 px-4 d-none d-lg-block">Cerrar Seción</a>
+
+            </div>
+        </nav>
+    </div>
+    <!-- Contenido -->
+    {% block contenido %}
+    {% endblock %}
+
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p class="m-0">&copy; 2025 Faster - Todos los derechos reservados y desarrollados por HENRRY BARRIONUEVO.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS (Bundle includes Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% if messages %}
+    {% for mensajeConfirmacion in messages %}
+        <script>
+            // Función para mostrar el mensaje de éxito
+            function showSuccessMessage(message) {
+                iziToast.success({
+                    title: 'Confirmación',
+                    message: message,
+                    position: 'topRight'
+                });
+            }
+    
+            // Función para mostrar el mensaje de error
+            function showErrorMessage(message) {
+                iziToast.error({
+                    title: 'Error',
+                    message: message,
+                    position: 'topRight'
+                });
+            }
+    
+            // Verifica el tipo de mensaje y llama a la función correspondiente
+            if ("{{ mensajeConfirmacion.tags }}" == "success") {
+                showSuccessMessage('{{ mensajeConfirmacion }}');
+            } else if ("{{ mensajeConfirmacion.tags }}" == "error") {
+                showErrorMessage('{{ mensajeConfirmacion }}');
+            }
+        </script>
+    {% endfor %}
+    {% endif %}
+    <script>
+        function showDeleteConfirmation(id, type) {
+            let url = '';
+            let message = '';
+        
+            // Determina la URL y el mensaje según el tipo de objeto
+            if (type === 'bus') {
+                url = `/eliminarBus/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar este bus?`;
+            } else if (type === 'conductor') {
+                url = `/eliminar_conductor/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar este conductor?`;
+            } else if (type === 'ruta') {
+                url = `/eliminar_ruta/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar esta ruta?`;
+            } else if (type === 'pasaje') {
+                url = `/eliminar_pasaje/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar este pasaje?`;
+            } else if (type === 'horario') {
+                url = `/eliminar_horario/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar este horario?`;
+            } else if (type === 'factura') {
+                url = `/eliminar_factura/${id}/`;
+                message = `¿Estás seguro de que deseas eliminar esta factura?`;
+            }
+        
+            // Mostrar la pregunta de confirmación en el centro
+            iziToast.question({
+                timeout: 20000,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                id: 'question',
+                zindex: 999,
+                title: 'Confirmación',
+                message: message,
+                position: 'center',  // La pregunta de confirmación aparece en el centro
+                buttons: [
+                    ['<button><b>SÍ</b></button>', function (instance, toast) {
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}', // Si CSRF está habilitado
+                            },
+                        })
+                        .then(response => response.json())  // Procesar la respuesta JSON
+                        .then(data => {
+                            if (data.success) {
+                                // Mensaje de éxito en la parte superior derecha
+                                iziToast.success({
+                                    title: 'Éxito',
+                                    message: data.message,
+                                    timeout: 5000,  // Aumentar el tiempo de visualización
+                                    position: 'topRight'  // Ajustar para que el mensaje de éxito esté en la parte superior derecha
+                                });
+                            } else {
+                                // Mensaje de error en la parte superior derecha
+                                iziToast.error({
+                                    title: 'Error',
+                                    message: data.message,
+                                    timeout: 5000,  // Aumentar el tiempo de visualización
+                                    position: 'topRight'  // Ajustar para que el mensaje de error esté en la parte superior derecha
+                                });
+                            }
+                            // Esperar un poco más antes de recargar la página para que el mensaje se lea
+                            setTimeout(() => location.reload(), 2000); // Recargar la página después de 2 segundos
+                        })
+                        .catch(error => {
+                            // Mensaje de error en la parte superior derecha en caso de fallo en la eliminación
+                            iziToast.error({
+                                title: 'Error',
+                                message: 'Ocurrió un problema al intentar eliminar.',
+                                timeout: 5000,  // Aumentar el tiempo de visualización
+                                position: 'topRight'  // Ajustar para que el mensaje de error esté en la parte superior derecha
+                            });
+                        });
+        
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }, true],
+                    ['<button>NO</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }]
+                ]
+            });
+        }
+    </script>
+    
+    
+    
+</body>
+
+</html>

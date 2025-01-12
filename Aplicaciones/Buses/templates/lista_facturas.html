@@ -1,0 +1,48 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Tabla de facturas en la columna única -->
+            <div class="col-lg-12">
+                <h4 class="mb-4 text-primary">Lista de Facturas</h4>
+                <div class="bg-light p-4">
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>ID de Factura</th>
+                                <th>Cliente</th>
+                                <th>Fecha de Emisión</th>
+                                <th>Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for factura in facturas %}
+                            <tr>
+                                <td>{{ factura.id_factura }}</td>
+                                <td>{{ factura.cliente.nombre }}</td>
+                                <td>{{ factura.fecha_emision }}</td>
+                                <td>${{ factura.total }}</td>
+                                <td>
+                                    <button onclick="showDeleteConfirmation({{ factura.id_factura }}, 'factura')" class="btn btn-danger btn-sm rounded-pill mb-2">Eliminar</button>                                                               
+
+                                    <a href="{% url 'generar_comprobante' factura.id_factura %}" class="btn btn-primary btn-sm">Generar Comprobante</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No hay facturas registradas.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

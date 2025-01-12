@@ -1,0 +1,125 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="row w-100">
+            <!-- Formulario en la columna izquierda -->
+            <div class="col-lg-12 mb-4">
+                <h6 class="text-primary text-uppercase font-weight-bold">Gestionar Conductores</h6>
+                <h1 class="mb-4">Actualizar los Datos del Conductor</h1>
+                
+                <!-- Formulario de gestión de conductores -->
+                <div class="contact-form bg-secondary" style="padding: 30px;">
+                    <div id="success"></div>
+                    <form name="sentMessage" id="id_formulario_conductor" method="post" novalidate="novalidate" action="/procesar_edicion_conductor/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_conductor" value="{{ conductor.id_conductor }}">
+                        
+                        <!-- Campo para el Nombre del Conductor -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="nombre" name="nombre" placeholder="Nombre del Conductor" required="required" data-validation-required-message="Por favor ingrese el nombre del conductor" value="{{ conductor.nombre }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Cédula del Conductor -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="cedula" name="cedula" placeholder="Cédula del Conductor" required="required" data-validation-required-message="Por favor ingrese la cédula del conductor" value="{{ conductor.cedula }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para el Teléfono del Conductor -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="telefono" name="telefono" placeholder="Teléfono del Conductor" value="{{ conductor.telefono }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para el Bus Asignado -->
+                        <div class="control-group">
+                            <select class="form-select form-control custom-select" id="bus_asignado" name="bus_asignado" required="required" data-validation-required-message="Por favor seleccione un bus asignado">
+                                <option value="">Seleccione el Bus</option>
+                                {% for bus in buses %}
+                                    <option value="{{ bus.id_bus }}" {% if conductor.bus_asignado.id_bus == bus.id_bus %} selected {% endif %}>
+                                        {{ bus.placa }} - {{ bus.modelo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Botón de acción -->
+                        <div class="control-group">
+                            <button class="btn btn-success py-3 px-4" type="submit" id="guardar_conductor">Actualizar Conductor</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#id_formulario_conductor").validate({
+            rules: {
+                "nombre": {
+                    required: true,
+                    minlength: 3
+                },
+                "cedula": {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 10
+                },
+                "telefono": {
+                    required: false,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 10
+                },
+                "bus_asignado": {
+                    required: true
+                }
+            },
+            messages: {
+                "nombre": {
+                    required: "Por favor, ingresa el nombre del conductor.",
+                    minlength: "El nombre debe tener al menos 3 caracteres."
+                },
+                "cedula": {
+                    required: "Por favor, ingresa la cédula del conductor.",
+                    digits: "La cédula debe contener solo números.",
+                    minlength: "La cédula debe tener 10 dígitos.",
+                    maxlength: "La cédula debe tener 10 dígitos."
+                },
+                "telefono": {
+                    digits: "El teléfono debe contener solo números.",
+                    minlength: "El teléfono debe tener 10 dígitos.",
+                    maxlength: "El teléfono debe tener 10 dígitos."
+                },
+                "bus_asignado": {
+                    required: "Por favor, selecciona un bus asignado."
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    label.error {
+        color: white;
+        font-weight: bold;
+        background-color: red;
+        border-radius: 10px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    input.error, textarea.error, select.error {
+        border: 1px solid red;
+    }
+</style>
+
+{% endblock %}

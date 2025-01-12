@@ -1,0 +1,137 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="row w-100">
+            <!-- Formulario en la columna izquierda -->
+            <div class="col-lg-12 mb-4">
+                <h6 class="text-primary text-uppercase font-weight-bold">Gestionar Rutas</h6>
+                <h1 class="mb-4">Actualizar los Datos de la Ruta</h1>
+                
+                <!-- Formulario de gestión de rutas -->
+                <div class="contact-form bg-secondary" style="padding: 30px;">
+                    <div id="success"></div>
+                    <form name="sentMessage" id="id_formulario_ruta" method="post" novalidate="novalidate" action="/procesar_edicion_ruta/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_ruta" value="{{ ruta.id_ruta }}">
+
+                        <!-- Campo para el Origen de la Ruta -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="origen" name="origen" placeholder="Origen de la Ruta" required="required" data-validation-required-message="Por favor ingrese el origen de la ruta" value="{{ ruta.origen }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para el Destino de la Ruta -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="destino" name="destino" placeholder="Destino de la Ruta" required="required" data-validation-required-message="Por favor ingrese el destino de la ruta" value="{{ ruta.destino }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Duración Aproximada de la Ruta -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="duracion_aproximada" name="duracion_aproximada" placeholder="Duración Aproximada" required="required" data-validation-required-message="Por favor ingrese la duración aproximada de la ruta" value="{{ ruta.duracion_aproximada }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para el Precio de la Ruta -->
+                        <div class="control-group">
+                            <input type="text" class="form-control border-0 p-4" id="precio" name="precio" placeholder="Precio de la Ruta" required="required" data-validation-required-message="Por favor ingrese el precio de la ruta" value="{{ ruta.precio }}"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <!-- Campo para Seleccionar el Bus -->
+                        <div class="control-group">
+                            <select class="form-select form-control custom-select" id="bus" name="bus" required="required">
+                                <option value="" disabled selected>Seleccione un Bus</option>
+                                {% for bus in buses %}
+                                <option value="{{ bus.id_bus }}" {% if bus.id_bus == ruta.bus_id %}selected{% endif %}>
+                                    {{ bus.placa }} - {{ bus.marca }} {{ bus.modelo }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        
+
+                        <!-- Botón de acción -->
+                        <div class="control-group">
+                            <button class="btn btn-success py-3 px-4" type="submit" id="guardar_ruta">Actualizar Ruta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#id_formulario_ruta").validate({
+            rules: {
+                "origen": {
+                    required: true,
+                    minlength: 3
+                },
+                "destino": {
+                    required: true,
+                    minlength: 3
+                },
+                "duracion_aproximada": {
+                    required: true,
+                    minlength: 3
+                },
+                "precio": {
+                    required: true,
+                    decimal: true,
+                    min: true
+                }
+            },
+            messages: {
+                "origen": {
+                    required: "Por favor, ingresa el origen de la ruta.",
+                    minlength: "El origen debe tener al menos 3 caracteres."
+                },
+                "destino": {
+                    required: "Por favor, ingresa el destino de la ruta.",
+                    minlength: "El destino debe tener al menos 3 caracteres."
+                },
+                "duracion_aproximada": {
+                    required: "Por favor, ingresa la duración aproximada de la ruta.",
+                    minlength: "La duración debe tener al menos 3 caracteres."
+                },
+                "precio": {
+                    required: "Por favor, ingresa el precio de la ruta.",
+                    number: "El precio debe ser un número válido.",
+                    min: "El precio debe ser mayor a 0."
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().find('.help-block'));
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('error').removeClass('valid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('error').addClass('valid');
+            }
+        });
+    });
+</script>
+
+<style>
+    label.error {
+        color: white;
+        font-weight: bold;
+        background-color: red;
+        border-radius: 10px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    input.error, textarea.error, select.error {
+        border: 1px solid red;
+    }
+</style>
+
+{% endblock %}

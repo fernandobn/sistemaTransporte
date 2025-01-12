@@ -1,0 +1,54 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Tabla de pasajes en la columna única -->
+            <div class="col-lg-12">
+                <h4 class="mb-4 text-primary">Lista de Pasajes</h4>
+                <div class="bg-light p-4">
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Ruta</th>
+                                <th>Hora de Salida</th>
+                                <th>Hora de Llegada</th>
+                                <th>Número de Asiento</th>
+                                <th>Costo</th>
+                                <th>Fecha de Compra</th>
+                                <th>Opciones</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pasaje in pasajes %}
+                            <tr>
+                                <td>{{ pasaje.cliente.nombre }}</td>
+                                <td>{{ pasaje.horario.ruta.origen }} → {{ pasaje.horario.ruta.destino }}</td>
+                                <td>{{ pasaje.horario.hora_salida }}</td>
+                                <td>{{ pasaje.horario.hora_llegada }}</td>
+                                <td>{{ pasaje.numero_asiento }}</td>
+                                <td>${{ pasaje.costo }}</td>
+                                <td>{{ pasaje.fecha_compra }}</td>
+                                <td>
+                                    <button onclick="showDeleteConfirmation({{ pasaje.id_pasaje }}, 'pasaje')" class="btn btn-danger btn-sm rounded-pill mb-2">Eliminar</button>                                                               
+
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No hay pasajes registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

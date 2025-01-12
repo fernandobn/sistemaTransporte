@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>FASTER - Compañia de buses</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Venta de pasajes online" name="description">
+    <!--jquery y izitoast-->
+    <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+    <script src="{% static 'js/jquery.validate.js' %}"></script>
+    <script src="{% static 'js/validacion.js' %}"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" integrity="sha512-DIW4FkYTOxjCqRt7oS9BFO+nVOwDL4bzukDyDtMO7crjUZhwpyrWBFroq+IqRe6VnJkTpRAS6nhDvf0w+wHmxg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="{% static 'css/colores_validacion.css' %}">
+
+
+
+    <!-- Favicon -->
+    <link href="{% static 'plantilla/transport/img/autobus.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'plantilla/transport/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'plantilla/transport/css/style.css' %}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    <!-- Topbar -->
+    <div class="container-fluid bg-dark">
+        <div class="row py-2 px-lg-5">
+            <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
+                <div class="d-inline-flex align-items-center text-white">
+                    <small><i class="fa fa-phone-alt mr-2"></i>+593 123 456 789</small>
+                    <small class="px-3">|</small>
+                    <small><i class="fa fa-envelope mr-2"></i>ventas@faster.com</small>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-white px-2" href="https://es-la.facebook.com/login/device-based/regular/login/"><i class="fab fa-facebook-f"></i></a>
+                    <a class="text-white px-2" href="https://twitter.com/login?"><i class="fab fa-twitter"></i></a>
+                    <a class="text-white px-2" href="https://www.instagram.com/accounts/login/"><i class="fab fa-instagram"></i></a>
+                    <a class="text-white pl-2" href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-lg-5">
+            <a href="/" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 display-5 text-uppercase text-primary"><i class="fa fa-bus-alt mr-2"></i>Faster</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                <div class="navbar-nav m-auto py-0">
+                    <a href="/" class="nav-item nav-link active">Inicio</a>
+                    <a href="/rutas/" class="nav-item nav-link">Rutas</a>
+                    <a href="/comprar_boletos/" class="nav-item nav-link">Comprar Pasajes</a>
+                </div>
+                <a href="/login/" class="btn btn-primary py-2 px-4 d-none d-lg-block">Iniciar Sesión</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Contenido -->
+    {% block contenido %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p class="m-0">&copy; 2025 Faster - Todos los derechos reservados y desarrollados por HENRRY BARRIONUEVO.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'plantilla/transport/lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'plantilla/transport/lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'plantilla/transport/lib/counterup/counterup.min.js' %}"></script>
+    <script src="{% static 'plantilla/transport/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'plantilla/transport/js/main.js' %}"></script>
+    {% if messages %}
+{% for mensajeConfirmacion in messages %}
+    <script>
+        // Función para mostrar el mensaje de éxito
+        function showSuccessMessage(message) {
+            iziToast.success({
+                title: 'Confirmación',
+                message: message,
+                position: 'topRight'
+            });
+        }
+
+        // Función para mostrar el mensaje de error
+        function showErrorMessage(message) {
+            iziToast.error({
+                title: 'Error',
+                message: message,
+                position: 'topRight'
+            });
+        }
+
+        // Verifica el tipo de mensaje y llama a la función correspondiente
+        if ("{{ mensajeConfirmacion.tags }}" == "success") {
+            showSuccessMessage('{{ mensajeConfirmacion }}');
+        } else if ("{{ mensajeConfirmacion.tags }}" == "error") {
+            showErrorMessage('{{ mensajeConfirmacion }}');
+        }
+    </script>
+{% endfor %}
+{% endif %}
+</body>
+
+</html>

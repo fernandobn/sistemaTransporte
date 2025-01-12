@@ -1,0 +1,216 @@
+{% extends 'plantilla.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<!-- Header Start -->
+<div class="jumbotron jumbotron-fluid mb-5 bg-primary text-white">
+    <div class="container text-center py-5">
+        <h1 class="text-white display-3 mb-5">Compra de boletos</h1>
+        <div class="d-inline-flex align-items-center">
+            <p class="m-0"><a class="text-white" href="">Inicio</a></p>
+            <i class="fa fa-circle px-3"></i>
+            <p class="m-0">Comprar</p>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Ticket Purchase Section Start -->
+<div class="container py-5">
+    <!-- Ticket Purchase Form -->
+    <h2 class="mt-5">Detalles de Compra</h2>
+    <form method="POST" action="/guardar_compra/" id="formulario_compra">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="nombre">Nombre del Cliente</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="apellido">Apellido del Cliente</label>
+                <input type="text" class="form-control" id="apellido" name="apellido" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="celular">Celular del Cliente</label>
+                <input type="text" class="form-control" id="celular" name="celular" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <!-- Route Selection Dropdown -->
+            <div class="form-group col-md-6">
+                <label for="rutas_select">Selecciona una Ruta</label>
+                <div class="input-group">
+                    <select class="form-select form-control custom-select" id="rutas_select" name="rutas" required>
+                        <option value="" disabled selected>Seleccione una ruta</option>
+                        {% for ruta in rutas %}
+                        <option value="{{ ruta.id_ruta }}" data-precio="{{ ruta.precio }}">{{ ruta.origen }} - {{ ruta.destino }} - {{ ruta.bus.marca }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <p class="help-block text-danger"></p>
+            </div>
+
+            <!-- Schedule Selection Dropdown -->
+            <div class="form-group col-md-6">
+                <label for="id_horarios_sele">Selecciona un Horario</label>
+                <div class="input-group">
+                    <select class="form-select form-control custom-select" id="id_horarios_sele" name="horario" required>
+                        <option value="" disabled selected>Seleccione un horario</option>
+                        {% for horario in horarios %}
+                        <option value="{{ horario.id_horario }}">{{ horario.hora_salida }} - {{ horario.hora_llegada }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <p class="help-block text-danger"></p>
+            </div>
+
+            <!-- Quantity Input -->
+            <div class="form-group col-md-3">
+                <label for="cantidad">Cantidad de Pasajes</label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad" min="1" value="1" required>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="total">Total a Pagar</label>
+            <input type="text" class="form-control" id="total" name="total" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-success">Confirmar Compra</button>
+        &nbsp;
+        {% if request.session.factura_id %}
+            <a id="btn-comprobante" class="btn btn-dark" href="{% url 'generar_comprobante' factura_id=request.session.factura_id %}">
+                Generar Comprobante
+            </a>
+        {% endif %}
+
+        </form>
+
+</div>
+   
+<script>
+// Function to calculate the total price
+function calculateTotal() {
+    const cantidadInput = document.getElementById('cantidad');
+    const rutasSelect = document.getElementById('rutas_select');
+    const totalInput = document.getElementById('total');
+
+    const cantidad = parseInt(cantidadInput.value) || 0;  // If empty, will be 0
+    const selectedOption = rutasSelect.options[rutasSelect.selectedIndex];
+    
+    // Ensure data-precio is parsed as a number (float)
+    const precio = parseFloat(selectedOption ? selectedOption.getAttribute('data-precio') : 0) || 0;
+
+    console.log(`Cantidad: ${cantidad}, Precio: ${precio}`);  // Debugging step
+
+    // Check if both cantidad and precio are valid numbers and greater than 0
+    if (precio > 0 && cantidad > 0) {
+        totalInput.value = `$${(precio * cantidad).toFixed(2)}`;
+    } else {
+        totalInput.value = "$0.00";
+    }
+}
+
+// Event listeners to trigger total calculation
+document.getElementById('cantidad').addEventListener('input', calculateTotal);
+document.getElementById('rutas_select').addEventListener('change', calculateTotal);
+
+// Trigger the calculation initially if a route is selected and quantity is provided
+document.addEventListener('DOMContentLoaded', function () {
+    const cantidadInput = document.getElementById('cantidad');
+    const rutasSelect = document.getElementById('rutas_select');
+
+    // Ensure that we do the calculation if both route and quantity are set
+    if (rutasSelect.value && cantidadInput.value > 0) {
+        calculateTotal();
+    }
+});
+
+</script>
+
+<script>
+    // Método personalizado para validar solo letras (incluye acentos y ñ)
+    jQuery.validator.addMethod("letras", function(value, element) {            
+        return this.optional(element) || /^[A-Za-zÁÉÍÓÚÑáéíóúñ ]*$/.test(value);
+    }, "Este campo solo acepta letras.");
+
+    // Configuración de la validación
+    $("#formulario_compra").validate({
+        rules: {
+            "nombre": {
+                required: true,
+                minlength: 3,
+                letras: true
+            },
+            "apellido": {
+                required: true,
+                minlength: 3,
+                letras: true
+            },
+            "celular": {
+                required: true,
+                pattern: "^0[9][0-9]{8}$", // Validación para números de teléfono de Ecuador (10 dígitos)
+                minlength: 10,
+                maxlength: 10
+            },
+            "rutas": {
+                required: true
+            },
+            "horario": {
+                required: true
+            },
+            "cantidad": {
+                required: true,
+                digits: true,
+                min: 1
+            }
+        },
+        messages: {
+            "nombre": {
+                required: "Por favor, ingresa el nombre del cliente.",
+                minlength: "El nombre debe tener al menos 3 caracteres.",
+            },
+            "apellido": {
+                required: "Por favor, ingresa el apellido del cliente.",
+                minlength: "El apellido debe tener al menos 3 caracteres.",
+            },
+            "celular": {
+                required: "Por favor, ingresa el celular del cliente.",
+                pattern: "El celular debe comenzar con 09 y tener 10 dígitos.",
+                minlength: "El celular debe tener exactamente 10 dígitos.",
+                maxlength: "El celular debe tener exactamente 10 dígitos.",
+            },
+            "rutas": {
+                required: "Por favor, selecciona una ruta."
+            },
+            "horario": {
+                required: "Por favor, selecciona un horario."
+            },
+            "cantidad": {
+                required: "Por favor, ingresa la cantidad de pasajes.",
+                digits: "Solo se permiten números enteros.",
+                min: "La cantidad mínima es 1."
+            }
+        },      
+    });
+</script>
+
+<style>
+    label.error {
+        color: white;
+        font-weight: bold;
+        background-color: red;
+        border-radius: 10px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    input.error, select.error {
+        border: 1px solid red;
+    }
+</style>
+
+
+{% endblock %}

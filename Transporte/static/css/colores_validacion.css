@@ -1,0 +1,18 @@
+/* estilos_formulario.css */
+
+label.error {
+    color: white;
+    font-weight: bold;
+    background-color: red;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+input.error {
+    border: 1px solid red;
+}
+
+textarea.error {
+    border: 1px solid red;
+}

@@ -1,0 +1,108 @@
+{% extends 'inicio_admin.html' %}
+
+{% load static %}
+
+{% block contenido %}
+<div class="container-fluid py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="row w-100">
+            <!-- Formulario en la columna izquierda -->
+            <div class="col-lg-12 mb-4">
+                <h6 class="text-primary text-uppercase font-weight-bold">Gestionar horarios</h6>
+                <h1 class="mb-4">Actualizar los horarios</h1>
+                
+                <!-- Formulario de gestión de horarios -->
+                <div class="contact-form bg-secondary" style="padding: 30px;">
+                    <form name="sentMessage" id="id_formulario_conductor" method="post" novalidate="novalidate" action="/procesar_edicion_horario/">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_horario" value="{{ horario.id_horario }}">
+
+                        <!-- Campo para la Ruta -->
+                        <div class="control-group">
+                            <select class="form-select form-control text-dark bg-white" id="ruta" name="ruta" required="required">
+                                <option value="">Seleccione una Ruta</option>
+                                {% for ruta in rutas %}
+                                    <option value="{{ ruta.id_ruta }}" {% if horario.ruta.id_ruta == ruta.id_ruta %} selected {% endif %}>
+                                        {{ ruta.origen }} → {{ ruta.destino }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Hora de Salida -->
+                        <div class="control-group">
+                            <input type="time" class="form-control border-0 p-4" id="hora_salida" name="hora_salida" required="required" value="{{ horario.hora_salida|date:'H:i' }}" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Campo para la Hora de Llegada -->
+                        <div class="control-group">
+                            <input type="time" class="form-control border-0 p-4" id="hora_llegada" name="hora_llegada" required="required" value="{{ horario.hora_llegada|date:'H:i' }}" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+
+                        <!-- Botón de acción -->
+                        <div class="control-group">
+                            <button class="btn btn-success py-3 px-4" type="submit" id="guardar_horario">Guardar Horario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#id_formulario_conductor").validate({
+            rules: {
+                "ruta": {
+                    required: true
+                },
+                "hora_salida": {
+                    required: true
+                },
+                "hora_llegada": {
+                    required: true
+                }
+            },
+            messages: {
+                "ruta": {
+                    required: "Por favor, selecciona una ruta."
+                },
+                "hora_salida": {
+                    required: "Por favor, ingresa la hora de salida."
+                },
+                "hora_llegada": {
+                    required: "Por favor, ingresa la hora de llegada."
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().find('.help-block'));
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('error').removeClass('valid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('error').addClass('valid');
+            }
+        });
+    });
+</script>
+
+<style>
+    label.error {
+        color: white;
+        font-weight: bold;
+        background-color: red;
+        border-radius: 10px;
+        padding: 5px;
+        margin-top: 5px;
+    }
+    input.error, textarea.error, select.error {
+        border: 1px solid red;
+    }
+</style>
+
+{% endblock %}
